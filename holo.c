@@ -1,4 +1,13 @@
 /**
+ * holo.c - 14-Segment ASCII Art Renderer
+ *
+ * Copyright (c) 2025 Olivier Coz
+ *
+ * This software is released under the MIT License.
+ * See the LICENSE file for details.
+ */
+
+/**
  * 14-Segment ASCII Art Renderer
  *
  * A C program that renders rotating 3D text using a 14-segment display

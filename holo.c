@@ -61,8 +61,8 @@
 #define DEFAULT_POINT_LEN       0.85f
 #define DEFAULT_LIGHT_X         0.3f
 #define DEFAULT_LIGHT_Y         0.7f
-#define DEFAULT_CONTRAST        20.0f
-#define DEFAULT_ASCII_PALETTE   ".,-~:;=!*#$@"
+#define DEFAULT_CONTRAST        25.0f
+#define DEFAULT_ASCII_PALETTE         ".,-~:;=!*#$@"
 #define DEFAULT_DENSITY         0.1f
 #define DEFAULT_TIME_FORMAT     "%H:%M"
 
@@ -199,20 +199,18 @@ void project_and_draw(float x, float y, float z, float nx, float ny, float nz,
 }
 
 
-// --- Geometry Drawing ---
-
 /**
  * @brief Helper to rotate a point/normal from segment-local space to character space.
  * This reduces code duplication within draw_pointy_segment.
  * @param px, py, pz Point coordinates relative to the segment's center.
- * @param nx, ny Normal vector components (2D, as Z is 0 in local space).
+ * @param nx, ny, nz Normal vector components.
  * @param def The segment's definition (position and pre-calculated rotation).
  * @param char_center_x The X-offset of the character this segment belongs to.
  * @param ctx The RenderContext for the current frame.
  */
 static void draw_rotated_point(
     float px, float py, float pz,      // Point coords relative to segment center
-    float nx, float ny,                // Normal vector (2D, as Z is always 0 in local space)
+    float nx, float ny, float nz,      // Normal vector
     const SegmentDef* def, float char_center_x, // Segment and character definitions
     const RenderContext* ctx
 ) {
@@ -221,10 +219,12 @@ static void draw_rotated_point(
     float rpy = px * def->sin_ra + py * def->cos_ra;
     float rnx = nx * def->cos_ra - ny * def->sin_ra;
     float rny = nx * def->sin_ra + ny * def->cos_ra;
+    // Rotation is around the Z-axis, so the normal's Z component is unchanged
+    float rnz = nz;
 
     // Translate to final position and project
     project_and_draw(rpx + def->pos_x + char_center_x, rpy + def->pos_y, pz,
-                     rnx, rny, 0, ctx);
+                     rnx, rny, rnz, ctx);
 }
 
 /**
@@ -236,13 +236,23 @@ void draw_pointy_segment(float length, float seg_w, float seg_t, float point_len
                          const SegmentDef* def, float char_center_x, float density,
                          const RenderContext* ctx)
 {
-    // Draw the two main flat faces of the segment
+    // Draw the top and bottom flat faces of the segment
     for (float i = -length / 2.0f; i < length / 2.0f; i += density) {
         for (float j = -seg_t / 2.0f; j < seg_t / 2.0f; j += density) {
             // Top face (normal points up in local Y)
-            draw_rotated_point(i, seg_w / 2.0f, j, 0, 1, def, char_center_x, ctx);
+            draw_rotated_point(i, seg_w / 2.0f, j, 0, 1, 0, def, char_center_x, ctx);
             // Bottom face (normal points down in local Y)
-            draw_rotated_point(i, -seg_w / 2.0f, j, 0, -1, def, char_center_x, ctx);
+            draw_rotated_point(i, -seg_w / 2.0f, j, 0, -1, 0, def, char_center_x, ctx);
+        }
+    }
+
+    // Draw the front and back faces of the segment body
+    for (float i = -length / 2.0f; i < length / 2.0f; i += density) {
+        for (float j = -seg_w / 2.0f; j < seg_w / 2.0f; j += density) {
+            // Front face (normal points out in local +Z)
+            draw_rotated_point(i, j, seg_t / 2.0f, 0, 0, 1, def, char_center_x, ctx);
+            // Back face (normal points in in local -Z)
+            draw_rotated_point(i, j, -seg_t / 2.0f, 0, 0, -1, def, char_center_x, ctx);
         }
     }
 
@@ -260,13 +270,13 @@ void draw_pointy_segment(float length, float seg_w, float seg_t, float point_len
             float p2 = -length / 2.0f - u;
 
             // End 1, Top Face
-            draw_rotated_point(p1, yp, pz, cnx, cny, def, char_center_x, ctx);
+            draw_rotated_point(p1, yp, pz, cnx, cny, 0, def, char_center_x, ctx);
             // End 1, Bottom Face
-            draw_rotated_point(p1, -yp, pz, cnx, -cny, def, char_center_x, ctx);
+            draw_rotated_point(p1, -yp, pz, cnx, -cny, 0, def, char_center_x, ctx);
             // End 2, Top Face
-            draw_rotated_point(p2, yp, pz, -cnx, cny, def, char_center_x, ctx);
+            draw_rotated_point(p2, yp, pz, -cnx, cny, 0, def, char_center_x, ctx);
             // End 2, Bottom Face
-            draw_rotated_point(p2, -yp, pz, -cnx, -cny, def, char_center_x, ctx);
+            draw_rotated_point(p2, -yp, pz, -cnx, -cny, 0, def, char_center_x, ctx);
         }
     }
 }

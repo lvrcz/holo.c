@@ -6,7 +6,7 @@ A `donut.c` inspired C program that renders rotating 3D text as retro-futuristic
 
 It takes any text you provide—or defaults to showing the current date—and spins it around in 3D, complete with adjustable lighting, speed, and style.
 
-![holo.c in action](link_to_your_gif.gif) GIF coming soon
+![holo.c in action](https://raw.githubusercontent.com/lvrcz/holo.c/refs/heads/main/holo_c.gif) GIF coming soon
 
 
 ## Features

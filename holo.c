@@ -62,7 +62,7 @@
 #define DEFAULT_LIGHT_X         0.3f
 #define DEFAULT_LIGHT_Y         0.7f
 #define DEFAULT_CONTRAST        20.0f
-#define DEFAULT_PALETTE         ".,-~:;=!*#$@"
+#define DEFAULT_ASCII_PALETTE   ".,-~:;=!*#$@"
 #define DEFAULT_DENSITY         0.1f
 #define DEFAULT_TIME_FORMAT     "%H:%M"
 
@@ -309,7 +309,7 @@ void print_usage(const char* prog_name) {
     fprintf(stderr, " -d <val>   Drawing density (step rate). Smaller is denser. Default: %.1f\n", DEFAULT_DENSITY);
     fprintf(stderr, " -L <x,y>   Light vector (no spaces). Default: %.1f,%.1f\n", DEFAULT_LIGHT_X, DEFAULT_LIGHT_Y);
     fprintf(stderr, " -c <val>   Shading contrast. Default: %.1f\n", DEFAULT_CONTRAST);
-    fprintf(stderr, " -P <str>   Shading character palette. Default: \"%s\"\n", DEFAULT_PALETTE);
+    fprintf(stderr, " -P <str>   Shading character palette. Default: \"%s\"\n", DEFAULT_ASCII_PALETTE);
     fprintf(stderr, " -f <fmt>   Set the date/time format (strftime). Default: \"%s\"\n", DEFAULT_TIME_FORMAT);
     fprintf(stderr, "            Examples: \"%%Y-%%m-%%d\" (date), \"%%I:%%M %%p\" (12h), \"%%Y-%%m-%%d %%H:%%M\" (both)\n");
     fprintf(stderr, "\n -?         Display this help message.\n");
@@ -324,7 +324,7 @@ int main(int argc, char* argv[]) {
     float spacing_factor = DEFAULT_SPACING_FACTOR;
     float seg_w = DEFAULT_SEG_WIDTH, seg_t = DEFAULT_SEG_THICK, point_len = DEFAULT_POINT_LEN;
     float light_x = DEFAULT_LIGHT_X, light_y = DEFAULT_LIGHT_Y, contrast = DEFAULT_CONTRAST, density = DEFAULT_DENSITY;
-    const char* palette = DEFAULT_PALETTE;
+    const char* palette = DEFAULT_ASCII_PALETTE;
     const char* time_date_format = DEFAULT_TIME_FORMAT;
     float manual_zoom = -1.0f;
 

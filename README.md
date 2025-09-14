@@ -114,4 +114,3 @@ This project would not exist without the brilliant work of others. It stands on 
 ## License
 
 This project is licensed under the **MIT License**. See the `LICENSE` file for details. Feel free to fork it, play with it, and make it your own!
-```
